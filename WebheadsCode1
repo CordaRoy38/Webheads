@@ -1,0 +1,534 @@
+campaignTrail_temp.election_json = [
+    {
+        "model": "campaign_trail.election",
+        "pk": 9,
+        "fields": {
+            "year": 2016,
+            "display_year": "Webheads",
+            "summary": "<p>Excelsior, true believers!</p><p>The modern metropolis of New York City sees the fight of the ages between the scheming, Jekyll and Hyde corporate juggernaut Norman Osborn, against that of a David and Goliath reactionary, the hot-tempered J. Jonah Jameson of <i>The Daily Bugle</i>.</p><p>Will the Big Apple see a true brawl between conflicting ideologies? Or is a coronation written in the stars? Find out!</p>",
+            "image_url": "https://i.imgur.com/2p1eU8B.png",
+            "winning_electoral_vote_number": 270,
+            "advisor_url": "https://i.imgur.com/WFxTeje.jpeg",
+            "recommended_reading": "<ul>\n<li><a href=https://www.chicagotribune.com/opinion/editorials/ct-edit-chicago-tribune-biden-endorsement-20200925-lnyxsb5qvrftnjjmj3rnzj33jy-story.html>Our Case For Joe Biden</a></li>\n<li><a href=https://nationalinterest.org/feature/case-trump-166808>The Case For Trump</a></li>\n<li><a href=https://www.npr.org/2020/11/18/935730100/how-biden-won-ramping-up-the-base-and-expanding-margins-in-the-suburbs>How Biden Won: Ramping Up The Base And Expanding Margins In The Suburbs</a></li>\n<li><a href=https://www.prospectmagazine.co.uk/politics/donald-trump-joe-biden-us-election-almost-win-votes-concede>Why Did Trump Almost Win?</a></li>\n<li><a href=https://www.hoover.org/research/no-evidence-voter-fraud-guide-statistical-claims-about-2020-election>No Evidence For Voter Fraud: A Guide To Statistical Claims About The 2020 Election</a></li>\n</ul>",
+            "has_visits": 1,
+            "no_electoral_majority_image": "../static/images/2012-no-majority.jpg"
+        }
+    }
+]
+
+const startScreenUpdater = setInterval(function() {
+	const goBackButton = document.getElementById("candidate_id_back");
+	const candidateButton = document.getElementById("candidate_id_button");
+	const runningMateButton = document.getElementById("running_mate_id_button");
+	const finalScreenBB = document.getElementById("opponent_selection_id_back");
+	const finalScreenID = document.getElementById("opponent_selection_id_button");
+    const difficultySlider = document.getElementById("difficulty_level");
+    const gameType = document.getElementById("game_type_id");
+
+    if(gameType){
+        const difficultySlider = document.getElementById("difficulty_level");
+        difficultySlider.style.display = 'none';
+        
+		multiplier = 1;
+    }
+    
+    if((candidateButton || c != 0)&& !runningMateButton){ // change theme on candidate viewing
+		var c = document.getElementById("candidate_id").value;
+		if(c == 77 && !(candidateButton) && !(runningMateButton)) {
+            goBackButton.click();
+            const initContinue = document.getElementById("election_id_button");
+            initContinue.click();
+		}
+		else if(c == 78) {
+            if(candidateButton) {
+                candidateButton.remove();
+            }
+		}
+	}
+    
+	else if(!candidateButton && runningMateButton) { 
+	    runningMateButton.click();
+        const finalBack = document.getElementById("opponent_selection_id_back");
+        finalBack.remove();
+        observer.disconnect()
+	}
+
+	if(finalScreenID) { // delete back button and delete the interval
+		finalScreenBB.remove();
+		clearInterval(startScreenUpdater);
+	}
+}, 1);
+
+campaignTrail_temp.temp_election_list = [
+    {
+        "id": 9,
+        "year": 2016,
+        "is_premium": 0,
+        "display_year": "Webheads"
+    }
+]
+
+campaignTrail_temp.credits = "Accurate_Feature9970<br>Special thanks to Big Deal Biden for Continue feature, 16ABY Organa for intro music function and 2000N for Music Player"
+
+<!-- MUSIC -->
+
+//Start theme
+var music;
+
+$("#game_start").click((event) => {
+    music = new Audio('https://file.garden/ZkoTZdfNUzpwCef7/Spider%20Man%20Theme.mp3');
+    music.volume = 0.5;
+    music.loop = false;
+    music.play();
+});
+
+//Main game
+
+musicMode = () => {
+    // Initialise custom music
+  
+    $("#music_player")[0].children[0].style.display = "none"
+    $("#music_player")[0].children[1].style.display = "none"
+  
+    document.getElementById("modLoadReveal").style.display = "none"
+    document.getElementById("modloaddiv").style.display = "none"
+  
+    musicBox = document.getElementById("music_player")
+    musicBox.style.display = ""
+  
+    var trackSel;
+    e = campaignTrail_temp
+    e.selectedSoundtrack = 0
+  
+    toTime = (seconds) => {
+        var date = new Date(null);
+        date.setSeconds(seconds);
+        return date.toISOString().substr(11, 8);
+    }
+  
+    generateTime = () => {
+        // Get the audio element
+        var audio = document.getElementById("campaigntrailmusic");
+  
+        timeTracker = document.createElement("div");
+        timeTracker.style = `
+  text-align:left;
+  border-style:solid;
+  border-width:3px;
+  height:150px;
+  width:200px;
+  background-color:#999999;
+  float:right;
+  padding: 10px;
+  `
+        $("#trackSelParent")[0].prepend(timeTracker);
+        $("#trackSelParent")[0].prepend(document.createElement("br"));
+  
+        // Create a new element to display the current position of the audio
+        var positionDisplay = document.createElement("gg");
+        positionDisplay.id = "position-display";
+  
+        // Create a new slider element to change the time
+        var timeSlider = document.createElement("input");
+        timeSlider.type = "range";
+        timeSlider.min = 0;
+        timeSlider.max = 1;
+        timeSlider.step = 0.001;
+        timeSlider.value = 0;
+        timeSlider.style.width = "200px";
+        timeSlider.id = "time-slider";
+  
+        var pausePlay = document.createElement("button");
+        pausePlay.id = "position-display";
+        pausePlay.innerHTML = "<b>Pause</b>"
+        pausePlay.style.width = "100%";
+  
+  
+        pausePlay.addEventListener("click", event => {
+            event.preventDefault();
+            updatePositionDisplay();
+            let audio = document.getElementById("campaigntrailmusic");
+            if (audio.paused) {
+                audio.play();
+                event.target.innerHTML = "<b>Pause</b>";
+                return;
+            }
+            audio.pause();
+            event.target.innerHTML = "<b>Play</b>";
+            return;
+        })
+  
+        var volumeLabel = document.createElement("gg");
+        volumeLabel.id = "volume-label";
+        volumeLabel.innerHTML = "<br><b>Volume: </b>"
+  
+        var volumeSlider = document.createElement("input");
+        volumeSlider.type = "range";
+        volumeSlider.min = 0;
+        volumeSlider.max = 1;
+        volumeSlider.step = 0.001;
+        volumeSlider.value = 0;
+        volumeSlider.style.width = "200px";
+        volumeSlider.id = "volume-slider";
+  
+        volumeSlider.value = audio.volume;
+  
+        timeTracker.appendChild(pausePlay);
+        timeTracker.appendChild(document.createElement("br"));
+        timeTracker.appendChild(document.createElement("br"));
+        timeTracker.appendChild(positionDisplay);
+        timeTracker.appendChild(timeSlider);
+        timeTracker.appendChild(volumeLabel);
+        timeTracker.appendChild(volumeSlider);
+  
+        updatePositionDisplay();
+  
+        //for (let i = 0; i < 10; i++)
+        //timeTracker.append(document.createElement("br"));
+  
+  
+        // Function to update the position display
+        function updatePositionDisplay() {
+            positionDisplay.innerHTML = "<b>Time:</b> " + toTime(audio.currentTime) + "<br>";
+            timeSlider.value = audio.duration ? audio.currentTime / audio.duration : 0;
+        }
+  
+        // Function to change the time of the audio
+        function changeTime() {
+            positionDisplay.innerHTML = "<b>Time:</b> " + toTime(audio.currentTime) + "<br>";
+            audio.currentTime = timeSlider.value * audio.duration;
+        }
+  
+        updateVolume = event => {
+            audio.volume = event.target.value;
+        }
+  
+        // Update the position display and slider every second
+        setInterval(updatePositionDisplay, 1000);
+  
+        // Listen for changes to the time slider and change the time of the audio
+        timeSlider.addEventListener("input", changeTime);
+        volumeSlider.addEventListener("input", updateVolume)
+    }
+  
+    function newMusicPlayer() {
+        trackSel = document.createElement("div");
+        trackSel.id = "trackSelParent"
+        let z = `<br><br><br><br><br><br><br><br><br><br><div id='trackSel' style="text-align:left;border-style:solid;border-width:3px;overflow-y: scroll;overflow-x: hidden;height:200px; width:400px;background-color:#A9A9A9;float:right;">`
+        z += `<b><select id='selectSoundtrack'><option value='` + soundtracks[e.selectedSoundtrack].name + `'>` + soundtracks[e.selectedSoundtrack].name + "</option>"
+        for (i in soundtracks) {
+            if (soundtracks[e.selectedSoundtrack] != soundtracks[i]) {
+                z += `<option value='` + soundtracks[i].name + `'>` + soundtracks[i].name + `</option>`
+            }
+        }
+        z += `</select></b><br><br>`
+            // <label><input type="radio" name="option" value="option1">Option 1</label><br>
+        for (i in soundtracks[e.selectedSoundtrack].tracklist) {
+            let a = soundtracks[e.selectedSoundtrack].tracklist[i]
+            let b = `<label><input class="trackSelector" type="radio" name="trackSelector" value="` + i + `">` + a.name + `</label><br>`
+            z += b
+        }
+        z += "</div><br><br>"
+        trackSel.innerHTML = z
+  
+        // select correct song
+  
+        musicBox.appendChild(trackSel);
+        Array.from(document.getElementById("trackSel").children).filter(f => {
+            return f.tagName == "LABEL"
+        }).map(f => f.children[0])[0].checked = true
+  
+        // set soundtrack changer
+  
+        soundtrackSelector = document.getElementById("selectSoundtrack")
+        soundtrackSelector.onchange = function() {
+            for (i in soundtracks) {
+                if (soundtracks[i].name == soundtrackSelector.value) {
+                    e.selectedSoundtrack = i
+                    break
+                }
+            }
+            document.getElementById("trackSelParent").remove()
+            newMusicPlayer()
+        }
+  
+        var matches = document.querySelectorAll('.trackSelector');
+  
+        for (match in matches) {
+            matches[match].onchange = function() {
+                audio = $("#campaigntrailmusic")[0];
+                audio.src = soundtracks[e.selectedSoundtrack].tracklist[this.value].url
+                audio.currentTime = 0
+            }
+        }
+  
+        musicBox.children[2].loop = false
+        musicBox.children[2].src = soundtracks[e.selectedSoundtrack].tracklist[0].url
+  
+        musicBox.children[2].onended = function() {
+            console.log("next track")
+            let selected = Number(document.querySelector('input[name="trackSelector"]:checked').value);
+            let newSel = clamp(selected + 1, soundtracks[e.selectedSoundtrack].tracklist.length - 1, 0)
+            let buttons = Array.from(document.getElementById("trackSel").children).filter(f => {
+                    return f.tagName == "LABEL"
+                }).map(f => f.children[0])
+                //let selectedIndex = buttons.map(f=>f.children[0]).map(f=>f.checked)
+            buttons[newSel].click()
+        }
+  
+        for (w = 0; w < 7; w++) {
+            document.getElementById("trackSelParent").appendChild(document.createElement("br"))
+        }
+  
+        generateTime();
+    }
+  
+    clamp = function(a, max, min, overflow = true) {
+        if (overflow) {
+            return a > max ? min : a < min ? max : a;
+        }
+        return a > max ? max : a < min ? min : a;
+    }
+  
+  
+    // Track list
+  
+    var soundtracks = {
+        0: {
+          name: "Soundtrack",
+          tracklist: [
+            {
+              "name": "Hero - Nickleback",
+              "url": "https://file.garden/ZkoTZdfNUzpwCef7/Hero.mp3"
+            },
+            {
+              "name": "Tracks from <i>Spider-Man</i> - Danny Elfman",
+              "url": "https://file.garden/ZkoTZdfNUzpwCef7/Green%20Goblin%20Theme.mp3"
+            }
+          ]
+        }        
+    }
+
+  
+    // Set up new music player
+  
+    newMusicPlayer()
+  
+
+}
+
+
+//Swaps from intro to game. No clue why this nesting is necessary.
+  $("#game_start").click((event) => {
+    event.preventDefault();
+    $("#election_id_button").click((event) => {
+    $("#candidate_id_button").click((event) => {
+    $("#running_mate_id_button").click((event) => { //this is necessary because the removal doesnt actually get rid of the running mate, it just clicks the next button really fast lmao
+    $("#opponent_selection_id_button").click((event) => {
+		music.pause();
+        musicMode();
+
+        if(audio !== null) {
+            audio.play();
+        }
+
+    })
+    })
+	})
+	})
+  })
+
+campaignTrail_temp.global_parameter_json = [
+    {
+        "model": "campaign_trail.global_parameter",
+        "pk": 1,
+        "fields": {
+            "vote_variable": 1.125,
+            "max_swing": 0.12,
+            "start_point": 0.94,
+            "candidate_issue_weight": 10,
+            "running_mate_issue_weight": 3,
+            "issue_stance_1_max": -0.71,
+            "issue_stance_2_max": -0.3,
+            "issue_stance_3_max": -0.125,
+            "issue_stance_4_max": 0.125,
+            "issue_stance_5_max": 0.3,
+            "issue_stance_6_max": 0.71,
+            "global_variance": 0.01,
+            "state_variance": 0.005,
+            "question_count": 12,
+            "default_map_color_hex": "#C9C9C9",
+            "no_state_map_color_hex": "#999999"
+        }
+    }
+]
+
+campaignTrail_temp.candidate_json = [
+    {
+        "model": "campaign_trail.candidate",
+        "pk": 77,
+        "fields": {
+            "first_name": "J. Jonah",
+            "last_name": "Jameson",
+            "election": 9,
+            "party": "Independent",
+            "state": "<i>The Daily Bugle</i>",
+            "priority": 1,
+            "description": "<p>The loud and bombastic head editor-in-chief at the struggling <i>Daily Bugle</i>, Jameson is a man both of passion and fury. Fearing the rise of costumed vigilantism in his fair city, he's made a name for himself voicing his disapproval of the antics of such delinquents, especially that of the otherwise beloved Spider-Man. With a strong sense of duty, he's put it high on the paper's priority to publish only the facts, that being the web-crawler in a menace and must be stopped!</p><p>Holding strong doubts concerning the loyalties of the darling of the political and economic world, Norman Osborn, Jameson feels it necessary to put his reputation on the line and finally take a stand for the town he so holds dear. He's the true voice of the people, and by Joph is he going to prove it!</p>",
+            "color_hex": "#d236dd",
+            "secondary_color_hex": null,
+            "is_active": 1,
+            "image_url": "https://i.imgur.com/5KdZ6z3.png",
+            "electoral_victory_message": "This guy wins!",
+            "electoral_loss_message": "This guy loses!",
+            "no_electoral_majority_message": "We all win?",
+            "description_as_running_mate": null,
+            "candidate_score": 1,
+            "running_mate": false
+        }
+    },
+    {
+        "model": "campaign_trail.candidate",
+        "pk": 81,
+        "fields": {
+            "first_name": "Peter",
+            "last_name": "Parker",
+            "election": 9,
+            "party": "Independent",
+            "state": "Queens",
+            "priority": 1,
+            "description": "<p><div style='overflow-y:scroll;height:200px;'><p>JAMESON: (<i>Pressing the desk intercom</i>) Grant, get me Parker.</p><p>[30 seconds pass.]</p><p>JAMESON: (<i>Pressing the intercom, harder this time</i>) Grant, get me Parker!</p><p>[Peter Parker rushes in, looking disheveled.]</p><p>PARKER: You wanted to see me Mr. Jameson?</p><p>JAMESON: Parker, you're fried.</p><p>PARKER: What?</p><p>JAMESON: You're hired as my new campaign photographer. I'm running for mayor.</p><p>PARKER: I don't have any interest in politics, Mr. Jameson. I'm trying to work my way up as a repo-</p><p>JAMESON: Okay, you're fired altogether, pack your things.</p><p>PARKER: Wait, Mr. Jameson! I'll do it!</p><p>JAMESON: Excellent. Now stop lounging around on my dime, I want pictures of Spider-Man!</p><p>PARKER: I thought I was photographing your campaign?</p><p>JAMESON: Not my campaign, Parker! I need pictures of Spider-Man! Show this city the menace he is, that's my campaign platform!</p><p>PARKER: (<i>Whispering to himself</i>) Oh, brother.</p><p>JAMESON: Move it!</p>",
+            "color_hex": "#0000FF",
+            "secondary_color_hex": null,
+            "is_active": 0,
+            "image_url": "https://i.imgur.com/dXzZpOk.png",
+            "electoral_victory_message": "This guy wins!",
+            "electoral_loss_message": "This guy loses!",
+            "no_electoral_majority_message": "We all win?",
+            "description_as_running_mate": "<p><div style='overflow-y:scroll;height:200px;'><p>JAMESON: (<i>Pressing the desk intercom</i>) Grant, get me Parker.</p><p>[30 seconds pass.]</p><p>JAMESON: (<i>Pressing the intercom, harder this time</i>) Grant, get me Parker!</p><p>[Peter Parker rushes in, looking disheveled.]</p><p>PARKER: You wanted to see me Mr. Jameson?</p><p>JAMESON: Parker, you're fried.</p><p>PARKER: What?</p><p>JAMESON: You're hired as my new campaign photographer. I'm running for mayor.</p><p>PARKER: I don't have any interest in politics, Mr. Jameson. I'm trying to work my way up as a repo-</p><p>JAMESON: Okay, you're fired altogether, pack your things.</p><p>PARKER: Wait, Mr. Jameson! I'll do it!</p><p>JAMESON: Excellent. Now stop lounging around on my dime, I want pictures of Spider-Man!</p><p>PARKER: I thought I was photographing your campaign?</p><p>JAMESON: Not my campaign, Parker! I need pictures of Spider-Man! Show this city the menace he is, that's my campaign platform!</p><p>PARKER: (<i>Whispering to himself</i>) Oh, brother.</p><p>JAMESON: Move it!</p>",
+            "candidate_score": 1,
+            "running_mate": true
+        }
+    },
+    {
+        "model": "campaign_trail.candidate",
+        "pk": 78,
+        "fields": {
+            "first_name": "Norman",
+            "last_name": "Osborn",
+            "election": 9,
+            "party": "Republican/Democratic",
+            "state": "OsCorp",
+            "priority": 1,
+            "description": "<p>Accomplished businessman and entrepreneur Norman Osborn has capitvated the psyche of New York since his multibillion-dollar eponymous enterprise, OsCorp, finalized a deal with the federal government to commission gliders for use in the military. Though thought a nonsensical and gimmicky venture, their use in a recent conflict involving Latveria and the United States has proven the doubters and critics wrong.</p><p>Now, Osborn has shocked the political system of the Big Apple in his recent political entry, announcing his mayoral campaign hot off the resignation of the last embattled city mayor for connections to infamous gangster and slumlord, Wilson Fisk. With wide approval across the political spectrum and opposition in only a fringe, madcap newspaper magnate, victory for Norman is most assuredly a matter of time.</p>",
+            "color_hex": "#10c61c",
+            "secondary_color_hex": null,
+            "is_active": 1,
+            "image_url": "https://i.imgur.com/vB9KCHw.png",
+            "electoral_victory_message": "This guy wins!",
+            "electoral_loss_message": "This guy loses!",
+            "no_electoral_majority_message": "We all win?",
+            "description_as_running_mate": null,
+            "candidate_score": 1,
+            "running_mate": false
+        }
+    },
+    {
+        "model": "campaign_trail.candidate",
+        "pk": 85,
+        "fields": {
+            "first_name": "Green",
+            "last_name": "Goblin",
+            "election": 9,
+            "party": "Chaos",
+            "state": "The Inner Machinations of Osborn's Mind",
+            "priority": 1,
+            "description": "<div style='overflow-y:scroll;height:200px;'><p>OSBORN: (<i>Sobbing, drinking liquor to cool his nerves</i>) I just can't, I can't do it, I don't, I don't wanna...</p><p>[He turns to look at the mask of the sinister Green Goblin, hanging ominously over his luxury chair.]</p><p>OSBORN: Why do we have to do this? I don't want to run for mayor.</p><p>GOBLIN: Osborn, you feckless green discharge of a man, we have to run for mayor! It's the only way.</p><p>OSBORN: (<i>Rubbing the tears from his eyes</i>) The only way for what?</p><p>GOBLIN: The only way to kill Spider-Man!</p><p>OSBORN: But, I don't understand.</p><p>GOBLIN: I don't expect you to. Once we have control of the city, we'll have him in our grasp! We'll control the levers of power to turn the system against him! He'll be outlawed! We'll destroy him!</p><p>OSBORN: Okay. Okay, I'll do it.</p><p>GOBLIN: Good Osborn, now straighten yourself up. You have a campaign to run for me!</p>",
+            "color_hex": "#0000FF",
+            "secondary_color_hex": null,
+            "is_active": 0,
+            "image_url": "https://i.imgur.com/IoMqveS.png",
+            "electoral_victory_message": "This guy wins!",
+            "electoral_loss_message": "This guy loses!",
+            "no_electoral_majority_message": "We all win?",
+            "description_as_running_mate": "<div style='overflow-y:scroll;height:200px;'><p>OSBORN: (<i>Sobbing, drinking liquor to cool his nerves</i>) I just can't, I can't do it, I don't, I don't wanna...</p><p>[He turns to look at the mask of the sinister Green Goblin, hanging ominously over his luxury chair.]</p><p>OSBORN: Why do we have to do this? I don't want to run for mayor.</p><p>GOBLIN: Osborn, you feckless green discharge of a man, we have to run for mayor! It's the only way.</p><p>OSBORN: (<i>Rubbing the tears from his eyes</i>) The only way for what?</p><p>GOBLIN: The only way to kill Spider-Man!</p><p>OSBORN: But, I don't understand.</p><p>GOBLIN: I don't expect you to. Once we have control of the city, we'll have him in our grasp! We'll control the levers of power to turn the system against him! He'll be outlawed! We'll destroy him!</p><p>OSBORN: Okay. Okay, I'll do it.</p><p>GOBLIN: Good Osborn, now straighten yourself up. You have a campaign to run for me!</p>",
+            "candidate_score": 1,
+            "running_mate": true
+        }
+    }
+]
+
+campaignTrail_temp.running_mate_json = [
+    {
+        "model": "campaign_trail.running_mate",
+        "pk": 109261,
+        "fields": {
+            "candidate": 77,
+            "running_mate": 81
+        }
+    },
+    {
+        "model": "campaign_trail.running_mate",
+        "pk": 139070,
+        "fields": {
+            "candidate": 78,
+            "running_mate": 85
+        }
+    }
+]
+
+campaignTrail_temp.opponents_default_json = [
+    {
+        "election": 9,
+        "candidates": [
+            77,
+            78
+        ]
+    }
+]
+
+campaignTrail_temp.opponents_weighted_json = [
+    {
+        "election": 9,
+        "candidates": [
+            77,
+            78
+        ]
+    }
+]
+
+jet_data = {
+    "headerColor": "#f20232",
+    "windowColor": "#009afa",
+    "containerColor": "#065998",
+    "innerWindowColor": "#f2b021",
+    "bannerImageUrl": "https://i.imgur.com/rSYqSiF.png",
+    "backgroundImageUrl": "https://i.imgur.com/cahlK07.png",
+    "endingTextColor": "#000000",
+    "customQuote": "\"With Great Power...\"",
+    "gameTitle": "WEBHEADS"
+}
+
+//#startcode
+
+
+corrr = '\n              <h2>WEBHEADS</h2><font id="wittyquote" size="4" color="white"><em>"With Great Power..."</em></font>\n            ';
+
+
+nct_stuff.themes[nct_stuff.selectedTheme].coloring_title = "#f20232";
+
+nct_stuff.themes[nct_stuff.selectedTheme].coloring_window = "#009afa";
+
+document.getElementsByClassName("game_header")[0].style.backgroundColor = nct_stuff.themes[nct_stuff.selectedTheme].coloring_title;
+
+$("#game_window")[0].style.backgroundColor = nct_stuff.themes[nct_stuff.selectedTheme].coloring_window;
+
+$(".container")[0].style.backgroundColor = "#065998";
+
+document.getElementById("header").src = "https://i.imgur.com/rSYqSiF.png";
+
+document.body.background = "https://i.imgur.com/cahlK07.png";
+
+document.head.innerHTML += "<style>#results_container {color:#000000;} .inner_window_w_desc {background-color:#f2b021!important;}</style>";
+
+//#endcode
